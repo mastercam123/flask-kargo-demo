@@ -59,7 +59,7 @@ jobs:
     - name: Build and push docker image for dev environment
       if: startsWith(github.event.ref, 'refs/heads/dev')
       env:
-        ECR_URL: ${{ inputs.ECR_URL }}
+        ECR_URL: ${{ vars.ECR_URL }}
         APPLICATION_NAME: ${{ inputs.APPLICATION_NAME }}
         PROJECT_IDENTIFIER: ${{ inputs.PROJECT_IDENTIFIER }}
         RELEASE_VERSION: ${{ github.run_number }}
