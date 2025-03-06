@@ -3,7 +3,7 @@ on:
   push:
     branches: [ dev ]
     paths:
-        - 'app/**'
+        - 'app'
         - 'Dockerfile'
         - 'requirements.txt'
 
