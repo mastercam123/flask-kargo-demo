@@ -13,4 +13,4 @@ jobs:
       PROJECT_IDENTIFIER: ${{ vars.PROJECT_IDENTIFIER }}     
       AWS_REGION: ${{ vars.AWS_REGION }} 
       ECR_PUSH_ROLE: ${{ vars.ECR_PUSH_ROLE }}
-      gh_environment: dev
+      ECR_URL: ${{ vars.ECR_URL }}

@@ -21,7 +21,7 @@ if [[ -z $ECR_URL ]]; then
   exit 1
 fi
 
-imageTagWithVersion="$ECR_URL:$APPLICATION_NAME-$PROJECT_IDENTIFIER-$RELEASE_VERSION"
+imageTagWithVersion="$ECR_URL:$RELEASE_VERSION"
 
 echo "Image tag is '$imageTagWithVersion'"
 
