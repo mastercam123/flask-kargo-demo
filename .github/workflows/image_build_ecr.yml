@@ -1,0 +1,80 @@
+name: reusable workflow to push images to the ECR.
+
+on:
+    workflow_call:
+      inputs:    
+        APPLICATION_NAME:
+            required: true
+            type: string
+        PROJECT_IDENTIFIER:
+            required: true
+            type: string
+        AWS_REGION:
+            required: true
+            type: string
+        ECR_PUSH_ROLE:
+            required: true
+            type: string
+        ECR_URL:
+            required: true
+            type: string
+        gh_environment:
+            required: true
+            type: string
+  
+permissions:
+    id-token: write
+    contents: read
+
+jobs:
+  image-push:
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.gh_environment }}
+    steps:
+    - name: Checkout the repository
+      uses: actions/checkout@v4
+
+    - name: Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        role-to-assume: ${{ inputs.ECR_PUSH_ROLE }}
+        role-session-name: ecr-push-registry-${{ github.run_number }}
+        aws-region: ${{ inputs.AWS_REGION }}
+
+    - name: Login to AWS ECR
+      run: aws ecr get-login-password --region ${{ inputs.AWS_REGION }} |  docker login --username AWS --password-stdin ${{ inputs.ECR_URL }}
+
+    - name: Set output of the release version
+      if: startsWith(github.event.ref, 'refs/tags/v')
+      id: vars
+      run: echo "tag=${GITHUB_REF#refs/*/}" >> $GITHUB_OUTPUT
+
+    - name: Build and push docker image for prod environment
+      if: startsWith(github.event.ref, 'refs/tags/v')
+      env:
+        ECR_URL: ${{ vars.ECR_URL }}
+        APPLICATION_NAME: ${{ inputs.APPLICATION_NAME }}
+        PROJECT_IDENTIFIER: ${{ inputs.PROJECT_IDENTIFIER }}
+        RELEASE_VERSION: ${{ steps.vars.outputs.tag }}
+      run: bash ./build_image.sh
+
+    - name: Build and push docker image for dev environment
+      if: startsWith(github.event.ref, 'refs/heads/dev')
+      env:
+        ECR_URL: ${{ inputs.ECR_URL }}
+        APPLICATION_NAME: ${{ inputs.APPLICATION_NAME }}
+        PROJECT_IDENTIFIER: ${{ inputs.PROJECT_IDENTIFIER }}
+        RELEASE_VERSION: ${{ github.run_number }}
+      run: bash ./build_image.sh
+        
+    - name: Log out of Amazon ECR
+      if: always()
+      run: docker logout ${{ steps.login-ecr.outputs.registry }}
+
+    - name: Print something if it is internal dev deployment
+      if: startsWith(github.event.ref, 'refs/heads/dev')
+      run: echo "This is dev deployment"
+
+    - name: Print something if it is internal prod deployment
+      if: startsWith(github.event.ref, 'refs/tags/v')
+      run: echo "This is prod deployment"
