@@ -38,8 +38,9 @@ jobs:
         role-session-name: ecr-push-registry-${{ github.run_number }}
         aws-region: ${{ inputs.AWS_REGION }}
 
-    - name: Login to AWS ECR
-      run: aws ecr get-login-password --region ${{ inputs.AWS_REGION }} |  docker login --username AWS --password-stdin ${{ inputs.ECR_URL }}
+    - name: Login to Amazon ECR
+      id: login-ecr
+      uses: aws-actions/amazon-ecr-login@v2
 
     - name: Set output of the release version
       if: startsWith(github.event.ref, 'refs/tags/v')
