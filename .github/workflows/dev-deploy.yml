@@ -3,9 +3,7 @@ on:
   push:
     branches: [ dev ]
     paths:
-        - 'app'
-        - 'Dockerfile'
-        - 'requirements.txt'
+        - 'app/**'
 
 jobs:
   call-reusable-workflow:
