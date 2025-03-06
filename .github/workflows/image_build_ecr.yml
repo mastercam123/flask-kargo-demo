@@ -15,9 +15,6 @@ on:
         ECR_PUSH_ROLE:
             required: true
             type: string
-        ECR_URL:
-            required: true
-            type: string
         gh_environment:
             required: true
             type: string
