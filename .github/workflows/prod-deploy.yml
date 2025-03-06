@@ -1,0 +1,14 @@
+name: Pipeline for development environment
+on:
+  push:
+    tags: ['v*.*.*']
+
+jobs:
+  call-reusable-workflow:
+    uses: ./.github/workflows/image_build_ecr.yml
+    with:
+      APPLICATION_NAME: ${{ vars.APPLICATION_NAME }} 
+      PROJECT_IDENTIFIER: ${{ vars.PROJECT_IDENTIFIER }}     
+      AWS_REGION: ${{ vars.AWS_REGION }} 
+      ECR_PUSH_ROLE: ${{ vars.ECR_PUSH_ROLE }}
+      gh_environment: prod
