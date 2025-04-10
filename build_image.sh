@@ -56,4 +56,4 @@ echo "Building multi-platform image for: $PLATFORMS"
 docker buildx build --platform "$PLATFORMS" -t $imageTagWithVersion --push .
 
 echo "pushing container image to '$imageTagWithVersion'..."
-docker push $imageTagWithVersion
+#docker push $imageTagWithVersion
