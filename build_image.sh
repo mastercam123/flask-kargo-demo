@@ -5,7 +5,7 @@ RELEASE_VERSION="${RELEASE_VERSION:="latest-$GH_BUILD_NUMBER"}"
 ECR_URL="${ECR_URL:=}"
 APPLICATION_NAME="${APPLICATION_NAME:=}"
 PROJECT_IDENTIFIER="${PROJECT_IDENTIFIER:=}"
-PLATFORMS="linux/amd64,linux/arm64"
+PLATFORMS="linux/arm64"
 BUILDER_NAME="multiarch-builder" # Consistent builder name across all builds
 
 if [[ -z $APPLICATION_NAME ]]; then
