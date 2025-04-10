@@ -26,7 +26,7 @@ imageTagWithVersion="$ECR_URL:$RELEASE_VERSION"
 echo "Image tag is '$imageTagWithVersion'"
 
 echo "building container image..."
-docker build -t $imageTagWithVersion .
+docker buildx build --platform linux/amd64,linux/arm64 -t $imageTagWithVersion --push .
 
 echo "pushing container image to '$imageTagWithVersion'..."
 docker push $imageTagWithVersion
