@@ -1,4 +1,4 @@
-name: Pipeline for development environment
+name: Pipeline for prod environment
 on:
   push:
     tags: ['v*.*.*']
